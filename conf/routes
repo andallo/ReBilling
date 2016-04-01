@@ -1,0 +1,52 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+#
+GET     /                                   controllers.Application.index()
+GET     /login                              controllers.Application.login()
+POST    /login                              controllers.Application.authenticate()
+GET     /logout                             controllers.Application.logout()
+
+# Tariffs
+GET     /tariffs                            controllers.TariffController.tariffsPage()
+GET     /tariffs/:tariffs_collection        controllers.TariffController.tariffsCollectionPage(tariffs_collection: String)
+POST    /create_edit_tariff                 controllers.TariffController.createEditTariff()
+GET     /set_tariff_status                  controllers.TariffController.setStatus(tariffId: String, status: String)
+GET     /delete_tariff                      controllers.TariffController.deleteTariff(tariffId: String)
+
+# Payments
+GET     /payment_gateways                   controllers.PaymentsController.paymentGatewaysPage
+GET     /payment_gateways/:tab              controllers.PaymentsController.paymentGatewaysPageTab(tab: String)
+POST    /yandex_kassa/check_order_url       controllers.YandexKassaController.checkOrderURL()
+POST    /yandex_kassa/aviso_url             controllers.YandexKassaController.avisoURL()
+
+# Invoices
+POST    /invoice-file                       controllers.InvoiceController.invoiceDownload()
+POST    /invoice-pdf                        controllers.InvoiceController.invoicePrint()
+POST    /invoice-html                       controllers.InvoiceController.invoiceHtml()
+GET     /invoice-test                       controllers.InvoiceController.invoiceTest()
+
+# Config
+POST    /config                             controllers.ConfigController.save()
+
+# File Store
+GET     /file-store/:file_name              controllers.FileStoreController.getFileLastVersion(file_name: String)
+GET     /file-store/:file_name/:version     controllers.FileStoreController.getFile(file_name: String, version: Integer)
+
+# Customers
+GET     /customers                          controllers.CustomerController.customers()
+POST    /crete_edit_customer                controllers.CustomerController.creteEditCustomer()
+GET     /delete_customer                    controllers.CustomerController.deleteCustomer(customerId: String)
+
+# API
+GET     /api/tariffs                        controllers.api.TariffsAPI.getTariffTemplates(username: String)
+GET     /api/tariffs/active                 controllers.api.TariffsAPI.getActiveTariff(username: String, project: String)
+GET     /api/tariffs/actives                controllers.api.TariffsAPI.getActiveTariffs(username: String)
+POST    /api/tariffs/check                  controllers.api.TariffsAPI.check_LimitsPackets(username: String, project: String)
+POST    /api/tariffs/decrement              controllers.api.TariffsAPI.decrementPackets(username: String, project: String)
+GET     /api/tariffs/buy                    controllers.api.TariffsAPI.buyTariff(username: String, project: String, tariffId: String, shared: Boolean)
+GET     /api/customer                       controllers.api.CustomerAPI.getCustomerInfo(username: String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)

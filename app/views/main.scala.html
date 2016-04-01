@@ -1,0 +1,90 @@
+@(pageName: String, menuPosition: String)(content: Html)
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+
+    <title>Rebilling</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href='@routes.Assets.versioned("bootstrap-3.3.5-dist/css/bootstrap.min.css")' rel="stylesheet">
+    <link href='@routes.Assets.versioned("select2-4.0.2/dist/css/select2.min.css")' rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="@routes.Assets.versioned("stylesheets/dashboard.css")" rel="stylesheet">
+</head>
+<style>
+    .box {
+        background: #f5f5f5;
+        padding: 20px;
+    }
+</style>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Rebilling</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="@routes.Application.logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="sidebar">
+            <ul class="nav nav-sidebar">
+                <!--li @if(menuPosition.equals("Статистика")){class="active"}>
+                    <a href="/" data-toggle="tooltip" data-placement="right" title="Статистика">
+                        <img width="20" src="@routes.Assets.versioned("images/bars-graphic.png")" />
+                    </a>
+                </li-->
+                <li @if(menuPosition.equals("Тарифы")){class="active"}>
+                    <a href="/tariffs" data-toggle="tooltip" data-placement="right" title="Тарифы">
+                        <img width="20" style="display: inline" src="@routes.Assets.versioned("images/finance-and-business4.png")"/>
+                    </a>
+                </li>
+                <!--li @if(menuPosition.equals("Приём платежей")){class="active"}>
+                <a href="/payment_gateways" data-toggle="tooltip" data-placement="right" title="Приём платежей">
+                    <img width="20" style="display: inline" src="@routes.Assets.versioned("images/credit-card.png")"/>
+                </a>
+                </li-->
+                <li @if(menuPosition.equals("Покупатели")){class="active"}>
+                <a href="/customers" data-toggle="tooltip" data-placement="right" title="Покупатели">
+                    <img width="20" style="display: inline" src="@routes.Assets.versioned("images/multiple25.png")"/>
+                </a>
+                </li>
+            </ul>
+            <!--ul class="nav nav-sidebar">
+                <li><a href="">Nav item</a></li>
+            </ul-->
+        </div>
+
+        <div class="main">
+            <h1 class="page-header" style="color: #eee;">@pageName</h1>
+            @content
+        </div>
+
+<!-- > Footer<-->
+<br><br><br><br><br><br><br>
+</body>
+</html>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src='@routes.Assets.versioned("javascripts/jquery.min.js")'></script>
+<script src='@routes.Assets.versioned("bootstrap-3.3.5-dist/js/bootstrap.min.js")'></script>
+<script src='@routes.Assets.versioned("select2-4.0.2/dist/js/select2.min.js")'></script>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({container: 'body'})
+    });
+</script>

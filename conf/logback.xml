@@ -1,0 +1,33 @@
+<configuration>
+    
+  <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%coloredLevel - %logger - %message%n%xException%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="file-payments" class="ch.qos.logback.core.FileAppender">
+    <file>${application.home}/logs/payments.log</file>
+    <append>true</append>
+    <encoder>
+      <pattern>[%level] - %date{yyyy-MM-dd HH:mm:ss ZZZZ} - %logger %message%n%xException%n</pattern>
+    </encoder>
+  </appender>
+
+  <!--
+    The logger name is typically the Java/Scala package name.
+    This configures the log level to log at for a package and its children packages.
+  -->
+  <logger name="play" level="INFO" />
+  <logger name="application" level="DEBUG" />
+  <logger name="payments" level="INFO">
+    <appender-ref ref="file-payments" />
+  </logger>
+
+
+  <root level="ERROR">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

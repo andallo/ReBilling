@@ -1,0 +1,287 @@
+@(customers: List[models.users.Customer])
+
+
+@list_to_string(tariffs: List[String]) = @{
+    var tariffs_as_string = ""
+    if(tariffs != null && tariffs.size() > 0) {
+        for (tariff <- tariffs) {
+            tariffs_as_string = tariffs_as_string + tariff + ","
+        }
+        tariffs_as_string = tariffs_as_string.substring(0, tariffs_as_string.length - 1)
+    }
+
+    tariffs_as_string
+}
+
+@main("Покупатели", "Покупатели") {
+    <div class="form-group box">
+        <button type="button" class="btn btn-default"
+                data-toggle="modal" data-target="#edit-customer-modal" data-action="create">создать покупателя</button>
+    </div>
+
+    <!--div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1">
+                <a href="/customers/all">все (144)</a>
+            </div>
+            <div class="col-md-2">
+                <a href="/customers/all">без оплаты (75)</a><br>
+                <a href="/customers/all">одна оплата (23)</a><br>
+                <a href="/customers/all">несколько оплат (14)</a><br>
+                <a href="/customers/all">подписаны на тариф (4)</a>
+            </div>
+            <div class="col-md-3">
+                <a href="/customers/all">превышение по тарифу (2)</a><br>
+                <a href="/customers/all">скоро платить (1)</a><br>
+                <a href="/customers/all">ожидание оплаты (0)</a>
+            </div>
+        </div>
+    </div-->
+    <br><br>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>username</th>
+            <th>ооо</th>
+            <th>инн</th>
+            <th>кпп</th>
+            <th>email</th>
+            <th>адрес</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(customer <- customers){
+        <tr>
+            <td>@customer.getUsername()</td>
+            <td>@customer.getOooName()</td>
+            <td>@customer.getOooInn()</td>
+            <td>@customer.getOooKpp()</td>
+            <td>@customer.getEmail()</td>
+            <td>@customer.getOooAddress()</td>
+            <td>
+                <div class="dropdown">
+                    <span class="glyphicon glyphicon-menu-hamburger dropdown-toggle" aria-hidden="true" id="dropdownMenu1"
+                          data-toggle="dropdown" aria-haspopup="false" aria-expanded="false" style="cursor: pointer;"></span>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                        <li>
+                            <a href="#" onclick="return false;" data-toggle="modal" data-target="#edit-customer-modal"
+                               data-action="edit"
+                               data-customer_id="@customer.getId()"
+                               data-username="@customer.getUsername()"
+                               data-oooname="@customer.getOooName()"
+                               data-oooinn="@customer.getOooInn()"
+                               data-oookpp="@customer.getOooKpp()"
+                               data-oooaddress="@customer.getOooAddress()"
+                               data-email="@customer.getEmail()"
+                               data-credit_limit="@customer.getCreditLimit()"
+                               data-postpay_mode="@customer.getPostpayMode()"
+                               data-allow_shared_packs="@customer.getAllowSharedPack()"
+                               data-allow_shared_subscriptions="@customer.getAllowSharedSubscription()"
+                               data-tariffs="@list_to_string(customer.getTariffsCollectionList())">
+                                Редактировать
+                            </a>
+                        </li>
+                        <li><a onclick="return confirm('Удалить покупателя «@customer.getUsername()» ?');"
+                               href="/delete_customer?customerId=@customer.getId()">Удалить</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        }
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="edit-customer-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/crete_edit_customer" method="POST" enctype="multipart/form-data" class="form-inline">
+                        <input type="hidden" id="action" name="action" >
+                        <input type="hidden" id="customerId" name="customerId" >
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Уникальный логин" value=''>
+                        </div>
+                        <div class="form-group">
+                            <input size="30" type="text" class="form-control" id="email" name="email" placeholder="Email: killer@@mail.ru" value=''>
+                        </div>
+
+                        <br><br>
+                        <div class="form-group">
+                            <label class="control-label">Реквизиты:</label>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <input size="70" type="text" class="form-control" id="oooAddress" name="oooAddress"
+                                   placeholder="Юр. адрес: Москва, ул. Рощинская 2-я, дом 4, офис 503" value=''>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <input size="40" type="text" class="form-control" id="oooName" name="oooName" placeholder="Компания: ООО «СтройБетонМонтаж»" value=''>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="oooInn" name="oooInn" placeholder="ИНН: 7725790567" value=''>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="oooKpp" name="oooKpp" placeholder="КПП: 772501001" value=''>
+                        </div>
+
+                        <br><br><br>
+                        <div class="form-group">
+                            <input type="checkbox" id="postpay" name="postpay">
+                        </div>
+                        <div class="form-group">
+                            <label for="postpay" class="control-label" title="разрешить все операции, пакеты приобретать не нужно">
+                                Пост-оплата
+                            </label>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <div class="form-group">
+                            <input type="checkbox" id="allowSharedPack" name="allowSharedPack">
+                        </div>
+                        <div class="form-group">
+                            <label for="allowSharedPack" class="control-label" title="общий пакет для всех проектов">
+                                Общий пакет
+                            </label>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <div class="form-group">
+                            <input type="checkbox" id="allowSharedSubscription" name="allowSharedSubscription">
+                        </div>
+                        <div class="form-group">
+                            <label for="allowSharedSubscription" class="control-label" title="общая подписка для всех проектов">
+                                Общая подписка
+                            </label>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <input size="40" type="text" class="form-control" id="creditLimit" name="creditLimit"
+                                   title="кредитный лимит (руб.)" placeholder="Кредитный лимит (руб.): 30 000" value=''>
+                        </div>
+                        <div class="form-group">
+                            <label for="creditLimit" class="control-label"> руб.</label>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <label for="tariffsCollectionList" class="control-label">Тарифы:</label>
+                        </div>
+                        <br>
+                        <select id="tariffsCollectionList" name="tariffsCollectionList[]" multiple="multiple" style="width: 55%">
+                            @for(tariffCollection <- TariffController.getTariffsCollections()) {
+                                <option value="@tariffCollection">@tariffCollection</option>
+                            }
+                        </select>
+                        <br><br>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                            <button type="submit" class="btn btn-success">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<script>
+    @if(flash.get("success") != null && !flash.get("success").equals("")){
+        alert('@flash.get("success")');
+    }
+    @if(flash.get("error") != null && !flash.get("error").equals("")){
+        alert('@flash.get("error")')
+    }
+</script>
+<script>
+    $('#edit-customer-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var action = button.data('action');
+        var modal = $(this);
+
+        if (action == 'create') {
+            modal.find('.modal-title').text('Создать нового покупателя');
+            modal.find('#action').val('create');
+            modal.find('#customerId').val('');
+            modal.find('#username').val('');
+            modal.find('#oooName').val('');
+            modal.find('#oooInn').val('');
+            modal.find('#oooKpp').val('');
+            modal.find('#oooAddress').val('');
+            modal.find('#email').val('');
+            modal.find('#creditLimit').val('');
+            modal.find('#postpay').prop('checked', false);
+            modal.find('#allowSharedPack').prop('checked', false);
+            modal.find('#allowSharedSubscription').prop('checked', false);
+
+            $('#tariffsCollectionList option').each(function(option) {
+                $(this).prop('selected', false);
+            });
+            $('#tariffsCollectionList').trigger('change');
+        } else {
+            var customer_id = button.data('customer_id');
+            var username = button.data('username');
+            var oooname = button.data('oooname');
+            var oooinn = button.data('oooinn');
+            var oookpp = button.data('oookpp');
+            var oooaddress = button.data('oooaddress');
+            var email = button.data('email');
+            var credit_limit = button.data('credit_limit');
+            var postpay_mode = button.data('postpay_mode');
+            var allow_shared_packs = button.data('allow_shared_packs');
+            var allow_shared_subscriptions = button.data('allow_shared_subscriptions');
+            var tariffs = button.data('tariffs').split(',');
+
+            modal.find('.modal-title').text('Редактирование ' + username);
+            modal.find('#action').val('edit');
+            modal.find('#customerId').val(customer_id);
+            modal.find('#username').val(username);
+            modal.find('#oooName').val(oooname);
+            modal.find('#oooInn').val(oooinn);
+            modal.find('#oooKpp').val(oookpp);
+            modal.find('#oooAddress').val(oooaddress);
+            modal.find('#email').val(email);
+            modal.find('#creditLimit').val(credit_limit);
+            if (postpay_mode == true) {
+                modal.find('#postpay').prop('checked', true);
+            } else {
+                modal.find('#postpay').prop('checked', false);
+            }
+            if (allow_shared_packs == true) {
+                modal.find('#allowSharedPack').prop('checked', true);
+            } else {
+                modal.find('#allowSharedPack').prop('checked', false);
+            }
+            if (allow_shared_subscriptions == true) {
+                modal.find('#allowSharedSubscription').prop('checked', true);
+            } else {
+                modal.find('#allowSharedSubscription').prop('checked', false);
+            }
+
+            $('#tariffsCollectionList option').each(function(option) {
+                if(contains(tariffs, $(this).val())) {
+                    $(this).prop('selected', true);
+                } else {
+                    $(this).prop('selected', false);
+                }
+            });
+            $('#tariffsCollectionList').trigger('change');
+        }
+    });
+
+    $(document).ready(function() {
+        $('#tariffsCollectionList').select2();
+    });
+
+    function contains(a, obj) {
+        for (var i = 0; i < a.length; i++) {
+            if (a[i] === obj) {
+                return true;
+            }
+        }
+        return false;
+    }
+</script>

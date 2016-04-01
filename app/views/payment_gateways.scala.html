@@ -1,0 +1,366 @@
+@(config: Map[String,String], tab: String)
+
+@main("Приём платежей", "Приём платежей") {
+
+<div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+            <a href="#invoce" aria-controls="invoce" role="tab" data-toggle="tab">Банковский счёт</a>
+        </li>
+        <li role="presentation">
+            <a href="#yandex_kassa" aria-controls="yandex_kassa" role="tab" data-toggle="tab">Яндекс.Касса</a>
+        </li>
+        <li role="presentation">
+            <a href="#cloud_payments" aria-controls="cloud_payments" role="tab" data-toggle="tab">Cloud Payments</a>
+        </li>
+        <li role="presentation">
+            <a href="#pay_pall" aria-controls="pay_pall" role="tab" data-toggle="tab">Pay Pall</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content" style="padding: 0px 20px 0px 20px;">
+        <div role="tabpanel" class="tab-pane active" id="invoce">
+            <h3>Настройки</h3>
+            <div class="box">
+                <form action="/config" method="POST" enctype="multipart/form-data" class="form-inline">
+                    <div class="form-group">
+                        <input size="100" type="text" class="form-control" name="ooo_balance_invoice"
+                               placeholder="Назначение платежа для пополнения баланса"
+                               value='@config.get("ooo_balance_invoice")'>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <label class="control-label">Реквизиты:</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input size="100" type="text" class="form-control" id="ooo_address" name="ooo_address"
+                               placeholder="Юр. адрес: Москва, ул. Рощинская 2-я, дом 4, офис 503"
+                               value='@config.get("ooo_address")'>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input size="40" type="text" class="form-control" id="ooo_name" name="ooo_name"
+                               placeholder="ООО «Компания»" value='@config.get("ooo_name")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_name">название компании</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="ooo_telephone" name="ooo_telephone"
+                               placeholder="+7 985 913-30-10" value='@config.get("ooo_telephone")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_telephone">номер телефона</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="ooo_site" name="ooo_site"
+                               placeholder="http://website.ru" value='@config.get("ooo_site")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_site">интернет-сайт</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="ooo_inn" name="ooo_inn"
+                               placeholder="7725790567" value='@config.get("ooo_inn")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_inn">ИНН</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="ooo_kpp" name="ooo_kpp"
+                               placeholder="772501001" value='@config.get("ooo_kpp")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_kpp">КПП</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <label class="control-label">Расчётный счёт:</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input size="40" type="text" class="form-control" id="ooo_bank_name" name="ooo_bank_name"
+                               placeholder="ОАО АКБ «Авангард», г. Москва" value='@config.get("ooo_bank_name")'>
+                    </div>
+                    <div class="form-group">
+                        <input size="10" type="text" class="form-control" id="ooo_bank_bik" name="ooo_bank_bik"
+                               placeholder="044525201" value='@config.get("ooo_bank_bik")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_bank_name">банк</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input size="23" type="text" class="form-control" id="ooo_bank_corr" name="ooo_bank_corr"
+                               placeholder="30101810000000000201" value='@config.get("ooo_bank_corr")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_bank_corr">к/сч</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input size="23" type="text" class="form-control" id="ooo_bank_account" name="ooo_bank_account"
+                               placeholder="40702810600030005489" value='@config.get("ooo_bank_account")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_bank_account">р/сч</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <label class="control-label">Директор:</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input size="40" type="text" class="form-control" id="ooo_ceo_fio" name="ooo_ceo_fio"
+                               placeholder="Иванов И.И." value='@config.get("ooo_ceo_fio")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_ceo_fio">ФИО</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input size="23" type="text" class="form-control" id="ooo_ceo_position" name="ooo_ceo_position"
+                               placeholder="Генеральный директор" value='@config.get("ooo_ceo_position")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_ceo_position">должность</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <span>подпись</span>
+                        <input type="file" id="ooo_ceo_sign_image" name="ooo_ceo_sign_image">
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <label class="control-label">Бухгалтер:</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <input size="40" type="text" class="form-control" id="ooo_buh_fio" name="ooo_buh_fio"
+                               placeholder="Иванова И.И." value='@config.get("ooo_buh_fio")'>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="ooo_buh_fio">ФИО</label>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <span>подпись</span>
+                        <input type="file" id="ooo_buh_sign_image" name="ooo_buh_sign_image">
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <span>печать</span>
+                        <input type="file" id="ooo_stamp_image" name="ooo_stamp_image">
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <span>логотип</span>
+                        <input type="file" id="ooo_logo_image" name="ooo_logo_image">
+                    </div>
+                    <br><br>
+                    <input type="hidden" name="redirectURL" value="/payment_gateways/invoice">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="сохранить">
+                        <a target="_blank" href="/invoice-test">
+                            <button type="button" class="btn btn-link">посмотреть счёт</button>
+                        </a>
+                    </div>
+                </form>
+            </div>
+            <br>
+            <h3>HTML-форма для выставления счёта</h3>
+
+        </div>
+        <div role="tabpanel" class="tab-pane" id="yandex_kassa">
+            <h3>Настройки</h3>
+            <div class="box">
+                <form action="/config" method="POST" enctype="multipart/form-data" class="form-inline">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="shopId" name="yandex_kassa_shop_id"
+                               placeholder="Shop ID" value='@config.get("yandex_kassa_shop_id")'>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label"></label></div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="scid" name="yandex_kassa_scid"
+                               placeholder="Номер витрины (scid)" value='@config.get("yandex_kassa_scid")'>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label"></label></div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="secret" name="yandex_kassa_secret"
+                               placeholder="Пароль магазина" value='@config.get("yandex_kassa_secret")'>
+                    </div>
+                    <input type="hidden" name="redirectURL" value="/payment_gateways/yandex_kassa">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="сохранить">
+                    </div>
+                </form>
+                <br><br>
+                <form action="@routes.YandexKassaController.checkOrderURL()" method="POST" enctype="multipart/form-data" class="form-inline">
+                    <input type="hidden" name="invoiceId" value="0">
+                    <div class="form-group" style="width: 110px; text-align: right;">
+                        <label class="control-label">Check order url:</label>
+                    </div>
+                    <div class="form-group">
+                        <input size="50" type="text" class="form-control" disabled
+                               value='@{routes.YandexKassaController.checkOrderURL().absoluteURL(request()).replace("http:","https:")}'>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-info" value="проверить">
+                    </div>
+                </form>
+                <br>
+                <form action="@routes.YandexKassaController.avisoURL()" method="POST" enctype="multipart/form-data" class="form-inline">
+                    <input type="hidden" name="invoiceId" value="0">
+                    <div class="form-group" style="width: 110px; text-align: right;">
+                        <label class="control-label">Aviso url:</label>
+                    </div>
+                    <div class="form-group">
+                        <input size="50" type="text" class="form-control" disabled
+                               value='@{routes.YandexKassaController.avisoURL().absoluteURL(request()).replace("http:","https:")}'>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-info" value="проверить">
+                    </div>
+                </form>
+            </div>
+
+            <br>
+            <h3>HTML-форма оплаты</h3>
+            <form action="https://money.yandex.ru/eshop.xml" method="POST" enctype="multipart/form-data" class="form-inline">
+                <input type="hidden" name="" value="subscribe">
+                <input type="hidden" name="status" value="template-active">
+            </form>
+
+            <br>
+            <h3>Тестовый платёж</h3>
+            <div class="row">
+                <div class="col-md-7">
+                    <span> Для начала работы с Яндекс.Кассой нужно провести тестовый-платеж.</span><br>
+                    <span> Кнопка оплатить отправляет запрос на тестовый сервер яндекса.</span>
+                    <br><br>
+                    <!-- Обязательные поля -->
+                    <!-- Пример в кодировке UTF-8 (обязательно используйте именно эту кодировку для взаимодействия с Яндекс.Кассой)
+                    Внимание! Это только пример. Для того, чтобы он работал, обязательно пропишите в нем shopId и scid,
+                            который мы присылаем в письме на ваш контактный e-mail.
+                            Кроме того вам надо реализовать программную часть для CheckOrderURL и AvisoURL.
+                            -->
+                    <form name="ShopForm" method="POST" action="https://demomoney.yandex.ru/eshop.xml">
+                        <!-- ОБЯЗАТЕЛЬНАНЫЕ ПОЛЯ (все параметры яндекс.кассы регистрозависимые) -->
+                        <input name="shopId" value='@config.get("yandex_kassa_shop_id")' type="hidden"/>
+                        <input name="scid" value='@config.get("yandex_kassa_scid")' type="hidden"/>
+
+                        Идентификатор клиента:<br>
+                        <input type=text name="CustomerNumber" size="64" value="client007"><br><br>
+                        Сумма (руб.):<br>
+                        <input type=text name="sum" size="64" value="100"><br><br>
+
+                        <!-- CustomerNumber -- до 64 символов; идентификатор плательщика в ИС Контрагента.
+                        В качестве идентификатора может использоваться номер договора плательщика, логин плательщика и т.п.
+                        Возможна повторная оплата по одному и тому же идентификатору плательщика.
+
+                        sum -- сумма заказа в рублях.
+                        -->
+
+                        <!-- необязательные поля (все параметры яндекс.кассы регистрозависимые) -->
+                        <input name="orderNumber" value="order777" type="hidden"/>
+                        <input name="cps_phone" value="79110000000" type="hidden"/>
+                        <input name="cps_email" value="user@@domain.com" type="hidden"/>
+
+                        <!-- Внимание! Для тестирования в ДЕМО-среде доступны только два метода оплаты: тестовый Яндекс.Кошелек и Тестовая банковская карта
+                        -->
+                        Способ оплаты:
+                        <!--input name="paymentType" value="PC" type="radio"/>Со счета в Яндекс.Деньгах (яндекс кошелек)<br/-->
+                        <input name="paymentType" value="AC" type="radio" checked="checked"/>С банковской карты<br/>
+
+                        <!--
+                        Ниже перечислены доступные формы оплаты.
+                        Перечисленные методы оплаты могут быть доступны в боевой среде после подписания Договора.
+                        Какие именно методы доступны для вашего Договора, вы можете уточнить у своего персонального менеджера.
+
+                        AB - Альфа-Клик
+                        AC - банковская карта
+                        GP - наличные через терминал
+                        MA - MasterPass
+                        MC - мобильная коммерция
+                        PB  -интернет-банк Промсвязьбанка
+                        PC - кошелек Яндекс.Денег
+                        SB - Сбербанк Онлайн
+                        WM - кошелек WebMoney
+
+                        <input name="paymentType" value="GP" type="radio">Оплата по коду через терминал<br>
+                        <input name="paymentType" value="WM" type="radio">Оплата cо счета WebMoney<br>
+                        <input name="paymentType" value="AB" type="radio">Оплата через Альфа-Клик<br>
+                        <input name="paymentType" value="PB" type="radio">Оплата через Промсвязьбанк<br>
+                        <input name="paymentType" value="MA" type="radio">Оплата через MasterPass<br>
+                        -->
+                        <br>
+                        <input type=submit value="Оплатить"><br>
+                    </form>
+                    <hr />
+                    Документация: <a target="_blank" href="https://money.yandex.ru/doc.xml?id=526537">https://money.yandex.ru/doc.xml?id=526537</a>
+
+                    <!-- Тестовый яндекс.кошелек
+                    (прежде чем использовать тестовый яндекс.кошелек, обязательно войдите в https://demomoney.yandex.ru с указанными ниже логином и паролем)
+
+                    Test-for-yamoney@@yandex.ru
+                    Пароль для входа: yamoney
+                    Платежный пароль: testforyamoney
+                    -->
+
+                    <!-- Тестовая банковская карта
+
+                    Номер карты: 4268 0337 0354 5624
+                    Действует до: любая дата в будущем
+                    Имя и фамилия владельца: любое имя латиницей, например, IVAN DEMIDOV
+                    Код CVV: 123
+                    Email: свой e-mail
+
+                    Код CVC: 123
+                    -->
+
+                    <!--
+                    Пример ответа на POST запрос к CheckURL
+                    <?xml version="1.0" encoding="utf-8"?>
+                    <checkOrderResponse performedDatetime="2015-06-23T08:59:16+03:00" code="1" shopId="" invoiceId=""/>
+
+                    Пример ответа на paymentAviso при успехе обработки:
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <paymentAvisoResponse performedDatetime="2011-05-04T20:38:11.000+04:00" code="0" invoiceId="1234567" shopId="13"/>
+                    -->
+
+                    <!--
+                    EPS и PNG файлы яндекс.кошелька
+                    https://money.yandex.ru/partners/doc.xml?id=522991
+
+                    EPS и PNG других платежных методов
+                    https://money.yandex.ru/doc.xml?id=526421
+                    -->
+                </div>
+                <div class="col-md-5">
+                    <img width="350px" src="@routes.Assets.versioned("images/test-credit.png")"/>
+                    <br>
+                    <span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<b>Тестовая банковская карта</b>, код CVV: 123
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="cloud_payments">2</div>
+        <div role="tabpanel" class="tab-pane" id="pay_pall">3</div>
+    </div>
+</div>
+}
+<script>
+    $(function() {
+        if('@tab' != '') {
+            $('[aria-controls="@tab"]').trigger('click');
+        }
+    });
+</script>

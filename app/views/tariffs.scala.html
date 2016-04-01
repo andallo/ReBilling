@@ -1,0 +1,270 @@
+@(tariffs_collection: String, tariffs: List[models.tariffs.Tariff])
+
+@main("Тарифы", "Тарифы") {
+    <div class="form-group box">
+        <button type="button" class="btn btn-default"
+                data-toggle="modal" data-target="#edit-tariff-modal" data-action="create">добавить тариф</button>
+    </div>
+
+    @for(collection <- TariffController.getTariffsCollections()){
+    <a href="/tariffs/@collection">@collection</a>&nbsp;&nbsp;
+    }
+
+    @if(!tariffs_collection.equals("") && tariffs.size() != 0){
+    <h2>@tariffs_collection</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>тариф</th>
+            <th>тарифный план</th>
+            <th>сумма</th>
+            <th>пакет/лимит</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(tariff <- tariffs){
+        <tr @if(tariff.getStatus() != null && tariff.getStatus().equals("template-inactive")){
+            style="text-decoration: line-through;" class="danger" title="не активный тариф"}>
+            <td>@tariff.getName()</td>
+            <td>@controllers.utils.TariffUtils.getRuTariffType(tariff.getType())</td>
+            <td width="210px">@tariff.getSum() - @tariff.getDiscount()% = @tariff.getEndsum() @tariff.getCurrency()</td>
+            <td>
+                @for(operation <- tariff.getOperations){
+                    <span>
+                    @controllers.utils.TariffUtils.getRuOperationType(operation.getType())
+                    @operation.getLimit()
+                    @if(operation.isAllow_over_limit){&infin;}else{&nbsp;}
+                    -
+                    @operation.getName()
+                    &nbsp;
+                    @if(tariff.getSubscriptionPeriod() != null){ (@tariff.getSubscriptionPeriod() мес.) }
+                    </span>
+                    <br>
+                }
+            </td>
+            <td>
+                <div class="dropdown">
+                    <span class="glyphicon glyphicon-menu-hamburger dropdown-toggle" aria-hidden="true" id="dropdownMenu1"
+                          data-toggle="dropdown" aria-haspopup="false" aria-expanded="false" style="cursor: pointer;"></span>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                        @if(tariff.getStatus() != null && tariff.getStatus().equals("template-active")){
+                        <li><a href="/set_tariff_status?tariffId=@tariff.getId()&status=template-inactive">Скрыть</a></li>
+                        }else{
+                        <li><a href="/set_tariff_status?tariffId=@tariff.getId()&status=template-active">Сделать активным</a></li>
+                        }
+
+                        <li><a href="/delete_tariff?tariffId=@tariff.getId()" onclick="return confirm('Удалить тариф?') ? true : false;">Удалить</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        }
+        </tbody>
+    </table>
+    }else{
+    <br><br>
+    }
+
+    <div class="modal fade" id="edit-tariff-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/create_edit_tariff" method="POST" enctype="multipart/form-data" class="form-horizontal">
+                        <input type="hidden" name="status" value="template-active">
+                        <input type="hidden" id="action" name="action">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">Название</label>
+                            <div class="col-sm-4">
+                                <input size="64" type="text" class="form-control" id="name" name="name">
+                            </div>
+                            <div class="col-sm-5">
+                                @if(!tariffs_collection.equals("")){
+                                <input type="text" class="form-control" placeholder="Коллекция тарифов" disabled value="@tariffs_collection">
+                                <input type="hidden" name="tariffsCollection" value="@tariffs_collection">
+                                } else {
+                                <input type="text" class="form-control" placeholder="Коллекция тарифов" name="tariffsCollection">
+                                }
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <label class="control-label">Тариф:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label><input type="radio" name="type" value="subscription" checked>&nbsp;&nbsp;подписка</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label><input type="radio" name="type" value="packet">&nbsp;&nbsp;пакет</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label><input type="radio" name="type" value="oneoff">&nbsp;&nbsp;единоразовый</label>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="form-group">
+                            <label for="sum" class="col-sm-2 control-label">Стоимость</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="sum" name="sum">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="discount" name="discount" placeholder="Скидка (%)">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="end-sum-visible" placeholder="Итого" disabled>
+                                <input type="hidden" id="end-sum-hidden" name="endsum">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="subscription_period" name="subscription_period">
+                                    <option value="" selected disabled>период</option>
+                                    <option value="1">1 месяц</option>
+                                    <option value="3">3 месяца</option>
+                                    <option value="6">6 месяцев</option>
+                                    <option value="9">9 месяцев</option>
+                                    <option value="12">1 год</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-2">
+                                <select id="currency" name="currency" class="form-control">
+                                    <option>RUB</option>
+                                    <option>USD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <div id="limits-packets-panel">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Пакеты</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" disabled value="создание/обновление видео">
+                                    <input type="hidden" class="form-control" id="op_name[0]" name="op_name[0]" value="создание/обновление видео">
+                                    <input type="hidden" id="op_type[0]" name="op_type[0]" value="packet">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="op_limit[0]" name="op_limit[0]" placeholder="Сколько?">
+                                </div>
+                            </div>
+                            <!--div class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" disabled value="создание видео">
+                                    <input type="hidden" class="form-control" id="op_name[1]" name="op_name[1]" value="создание видео">
+                                    <input type="hidden" id="op_type[1]" name="op_type[1]" value="packet">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="op_limit[1]" name="op_limit[1]"
+                                           placeholder="Сколько?">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" disabled value="обновление видео">
+                                    <input type="hidden" class="form-control" id="op_name[2]" name="op_name[2]" value="обновление видео">
+                                    <input type="hidden" id="op_type[2]" name="op_type[2]" value="packet">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="op_limit[2]" name="op_limit[2]" placeholder="Сколько?">
+                                </div>
+                            </div-->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Лимиты</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" disabled value="кол-во актуальных видео">
+                                    <input type="hidden" class="form-control" id="op_name[1]" name="op_name[1]" value="кол-во актуальных видео">
+                                    <input type="hidden" id="op_type[3]" name="op_type[3]" value="limit">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="op_limit[1]" name="op_limit[1]" placeholder="Сколько?">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>
+                                        <input type="checkbox" id="op_allow_over_limit[1]" name="op_allow_over_limit[1]" title="разрешить актуальные видео сверх лимита">
+                                        &infin;
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="limits-panel">
+
+                        </div>
+                        <br><br>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                            <button type="submit" class="btn btn-success">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function(){
+        $('#edit-tariff-modal').on('show.bs.modal', function (event) {
+            var modal = $(this);
+            modal.find('.modal-title').text('Добавить тариф');
+            modal.find('#action').val('create');
+        });
+
+
+        $("[name='currency'], [name='sum'], [name='discount']").change(function(){
+            var sum = $(this).closest('form').find('#sum').val();
+            var discount = $(this).closest('form').find('#discount').val();
+            var currency = $(this).closest('form').find('#currency').val();
+
+            if (sum != '') {
+                var endsum = sum;
+                if (discount != null) {
+                    endsum = sum - Math.round(sum / 100 * discount);
+                }
+                $(this).closest('form').find('#end-sum-visible').val(' '.concat(endsum, ' ', currency));
+                $(this).closest('form').find('#end-sum-hidden').val(endsum);
+            } else {
+                $(this).closest('form').find('#end-sum-visible').val('');
+                $(this).closest('form').find('#end-sum-hidden').val('');
+            }
+        });
+
+        $("[name='type']").on('change', function(){
+            var type = $("[name='type']:checked").val();
+
+            if(type == 'subscription') {
+                $('#subscription_period').show();
+                $('#limits-packets-panel').show();
+            }
+            if(type == 'packet') {
+                $('#subscription_period').hide();
+                $('#limits-packets-panel').show();
+            }
+            if(type == 'oneoff') {
+                $('#subscription_period').hide();
+                $('#limits-packets-panel').hide();
+            }
+        });
+
+        $("[name='operation_type']").on('change', function(){
+            var operation_type = $("[name='operation_type']:checked").val();
+
+            if(operation_type == 'packets') {
+                $('#limits-panel').hide();
+                $('#packets-panel').show();
+            }
+            if(operation_type == 'limits') {
+                $('#packets-panel').hide();
+                $('#limits-panel').show();
+            }
+        });
+    });
+</script>
