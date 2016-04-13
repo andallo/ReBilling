@@ -102,7 +102,7 @@ public class TariffController extends Controller {
         String type = params.get("type");
         String currency = params.get("currency");
         Integer sum = Integer.valueOf(params.get("sum"));
-        Integer discount = Integer.valueOf(params.get("discount"));
+        String discount = params.get("discount");
         Integer endsum = Integer.valueOf(params.get("endsum"));
         String subscriptionPeriod = params.get("subscription_period");
         String tariffsCollection = params.get("tariffsCollection");
@@ -143,7 +143,7 @@ public class TariffController extends Controller {
         tariff.setType(type);
         tariff.setCurrency(currency);
         tariff.setSum(sum);
-        tariff.setDiscount(discount);
+        tariff.setDiscount(StringUtils.isEmpty(discount) ? 0 : Integer.valueOf(discount));
         tariff.setEndsum(endsum);
         tariff.setTariffsCollection(tariffsCollection);
         if (type.equals("subscription")) {
