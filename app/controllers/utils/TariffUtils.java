@@ -46,4 +46,8 @@ public class TariffUtils {
         active_tariff.setOperations(from_template.getOperations());
         return active_tariff;
     }
+
+    public static void validateTariffCollection(Tariff tariff) {
+        tariff.setTariffsCollection(tariff.getTariffsCollection().trim().replaceAll("[\\s-]", "_").replaceAll("[^a-zA-Z0-9_]", ""));
+    }
 }

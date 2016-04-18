@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers.utils.TariffUtils;
 import models.mongo.TariffsDS;
 import models.tariffs.Operation;
 import models.tariffs.Tariff;
@@ -50,6 +51,7 @@ public class TariffController extends Controller {
             flash("error", "Поле «коллекция тарифов» обязательно для заполнения.");
             return redirect(routes.TariffController.tariffsPage());
         }
+        TariffUtils.validateTariffCollection(_tariff);
 
         if (action.equals("create")) {
             _tariff.setCreated(new Date());

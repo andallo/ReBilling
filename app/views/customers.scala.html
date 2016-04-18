@@ -65,6 +65,15 @@
                           data-toggle="dropdown" aria-haspopup="false" aria-expanded="false" style="cursor: pointer;"></span>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                         <li>
+                            <a href="#" onclick="return false;" data-toggle="modal" data-target="#topup-balance-modal"
+                               data-customer_id="@customer.getId()"
+                               data-username="@customer.getUsername()"
+                               data-currency="@customer.getCurrency()"
+                               data-current-balance="@customer.getBalance()">
+                                Пополнить баланс
+                            </a>
+                        </li>
+                        <li>
                             <a href="#" onclick="return false;" data-toggle="modal" data-target="#edit-customer-modal"
                                data-action="edit"
                                data-customer_id="@customer.getId()"
@@ -187,6 +196,33 @@
         </div>
     </div>
 
+    <div class="modal fade" id="topup-balance-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/payments/topup_balance" method="POST" enctype="multipart/form-data" class="form-inline">
+                        <input type="hidden" id="customer-id" name="customerId">
+                        <input type="hidden" id="currency" name="currency">
+                        <label for="topup-sum"class="control-label">
+                            Пополнить на сумму:
+                        </label>
+                        <br>
+                        <input type="text" class="form-control" id="topup-sum" name="sum" value=''>
+                        <label for="topup-sum" id="topup-currency" class="control-label"></label>
+                        <br><br>
+                        <div class="modal-footer" style="text-align: left;">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                            <button type="submit" class="btn btn-success">Пополнить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 <script>
     @if(flash.get("success") != null && !flash.get("success").equals("")){
@@ -197,6 +233,24 @@
     }
 </script>
 <script>
+    $('#topup-balance-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var action = button.data('action');
+        var modal = $(this);
+
+        var customer_id = button.data('customer_id');
+        var username = button.data('username');
+        var current_balance = button.data('current-balance');
+        var currency = button.data('currency');
+        if (!currency || 0 === currency.length) {
+            currency = 'RUB';
+        }
+        modal.find('.modal-title').text(username + ' (' + current_balance + ' ' + currency + ')');
+        modal.find('#topup-currency').text(currency)
+        modal.find('#customer-id').val(customer_id);
+        modal.find('#currency').val(currency);
+    });
+
     $('#edit-customer-modal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var action = button.data('action');

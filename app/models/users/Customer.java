@@ -29,6 +29,7 @@ public class Customer {
     private Boolean allowSharedSubscription;
     private List<String> tariffsCollectionList;
     private Integer balance;
+    private String currency;
 
     public String getId() {
         return objectId == null ? null : objectId.toString();
@@ -136,5 +137,13 @@ public class Customer {
 
     public void setBalance(Integer balance) {
         this.balance = balance;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

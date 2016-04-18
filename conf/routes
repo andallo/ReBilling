@@ -20,6 +20,7 @@ GET     /payment_gateways                   controllers.PaymentsController.payme
 GET     /payment_gateways/:tab              controllers.PaymentsController.paymentGatewaysPageTab(tab: String)
 POST    /yandex_kassa/check_order_url       controllers.YandexKassaController.checkOrderURL()
 POST    /yandex_kassa/aviso_url             controllers.YandexKassaController.avisoURL()
+POST    /payments/topup_balance             controllers.PaymentsController.topupBalance
 
 # Invoices
 POST    /invoice-file                       controllers.InvoiceController.invoiceDownload()

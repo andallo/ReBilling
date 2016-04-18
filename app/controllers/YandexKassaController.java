@@ -82,8 +82,8 @@ public class YandexKassaController extends Controller {
                 paymentAvisoResponse.setCode(RESPONSE_SUCCESS);
 
                 _payment = PaymentDS.getPaymentByExtTransactionID(invoiceId);
-                _payment.setStatus("completed");
-                _payment.setCountry(cps_user_country_code);
+                _payment.setStatus("paid");
+                _payment.getYandexPayment().setCountry(cps_user_country_code);
                 _payment.setPaidAt(new Date());
                 PaymentDS.save(_payment);
             }
@@ -191,20 +191,22 @@ public class YandexKassaController extends Controller {
                 if (_payment == null) {
                     _payment = new Payment();
                 }
-                _payment.setStatus("authorized");
-                _payment.setAuthorizedAt(new Date());
+                _payment.setStatus("wait");
+                _payment.setCreatedAt(new Date());
                 _payment.setCustomerId(_customer.getId());
                 _payment.setCustomerName(_customer.getUsername());
-                _payment.setClientPaymentAccount(paymentPayerCode);
-                _payment.setExtTransactionId(invoiceId);
-                _payment.setIncome(Double.valueOf(shopSumAmount));
-                _payment.setIncomeCurrency(InvoiceUtils.getCurrencyName(shopSumCurrencyPaycash));
-                _payment.setPaymentGateway("yandex_kassa");
-                _payment.setPaymentType(paymentType);
-                _payment.setProcessingCenterId(shopSumBankPaycash);
                 _payment.setSum(Double.valueOf(orderSumAmount));
                 _payment.setSumCurrency(InvoiceUtils.getCurrencyName(orderSumCurrencyPaycash));
                 _payment.setTariffId(_tariff.getId());
+                Payment.YandexPayment _yandexPayment = new Payment.YandexPayment();
+                _yandexPayment.setClientPaymentAccount(paymentPayerCode);
+                _yandexPayment.setExtTransactionId(invoiceId);
+                _yandexPayment.setIncome(Double.valueOf(shopSumAmount));
+                _yandexPayment.setIncomeCurrency(InvoiceUtils.getCurrencyName(shopSumCurrencyPaycash));
+                _yandexPayment.setPaymentGateway("yandex_kassa");
+                _yandexPayment.setPaymentType(paymentType);
+                _yandexPayment.setProcessingCenterId(shopSumBankPaycash);
+                _payment.setYandexPayment(_yandexPayment);
 
                 PaymentDS.save(_payment);
             }

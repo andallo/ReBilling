@@ -17,12 +17,10 @@ public class Payment {
     @Id
     private ObjectId objectId;
 
-    // authorized / completed
+    // wait / paid
     private String status;
     private String tariffId;
-
-    private String extTransactionId;
-    private String processingCenterId;
+    private YandexPayment yandexPayment;
 
     @Indexed
     private String customerId;
@@ -30,26 +28,8 @@ public class Payment {
 
     private Double sum;
     private String sumCurrency;
-    private Double income;
-    private String incomeCurrency;
-    private String clientPaymentAccount;
 
-    /*------- Яндекс.Касса
-                        AB - Альфа-Клик
-                        AC - банковская карта
-                        GP - наличные через терминал
-                        MA - MasterPass
-                        MC - мобильная коммерция
-                        PB  -интернет-банк Промсвязьбанка
-                        PC - кошелек Яндекс.Денег
-                        SB - Сбербанк Онлайн
-                        WM - кошелек WebMoney
-     */
-    private String paymentType;
-    private String paymentGateway;
-    private String country;
-
-    private Date authorizedAt;
+    private Date createdAt;
     private Date paidAt;
 
     public String getId() {
@@ -60,17 +40,12 @@ public class Payment {
         return objectId;
     }
 
-
     public void setStatus(String status) {
         this.status = status;
     }
 
     public void setTariffId(String tariffId) {
         this.tariffId = tariffId;
-    }
-
-    public void setProcessingCenterId(String processingCenterId) {
-        this.processingCenterId = processingCenterId;
     }
 
     public String getCustomerId() {
@@ -93,30 +68,6 @@ public class Payment {
         this.sumCurrency = sumCurrency;
     }
 
-    public void setIncome(Double income) {
-        this.income = income;
-    }
-
-    public void setIncomeCurrency(String incomeCurrency) {
-        this.incomeCurrency = incomeCurrency;
-    }
-
-    public void setClientPaymentAccount(String clientPaymentAccount) {
-        this.clientPaymentAccount = clientPaymentAccount;
-    }
-
-    public void setPaymentType(String paymentType) {
-        this.paymentType = paymentType;
-    }
-
-    public void setPaymentGateway(String paymentGateway) {
-        this.paymentGateway = paymentGateway;
-    }
-
-    public void setAuthorizedAt(Date authorizedAt) {
-        this.authorizedAt = authorizedAt;
-    }
-
     public void setPaidAt(Date paidAt) {
         this.paidAt = paidAt;
     }
@@ -127,10 +78,6 @@ public class Payment {
 
     public String getTariffId() {
         return tariffId;
-    }
-
-    public String getProcessingCenterId() {
-        return processingCenterId;
     }
 
     public Double getSum() {
@@ -145,47 +92,100 @@ public class Payment {
         return sumCurrency;
     }
 
-    public Double getIncome() {
-        return income;
-    }
-
-    public String getIncomeCurrency() {
-        return incomeCurrency;
-    }
-
-    public String getClientPaymentAccount() {
-        return clientPaymentAccount;
-    }
-
-    public String getPaymentType() {
-        return paymentType;
-    }
-
-    public String getPaymentGateway() {
-        return paymentGateway;
-    }
-
-    public Date getAuthorizedAt() {
-        return authorizedAt;
-    }
-
     public Date getPaidAt() {
         return paidAt;
     }
 
-    public String getExtTransactionId() {
-        return extTransactionId;
+    public YandexPayment getYandexPayment() {
+        return yandexPayment;
     }
 
-    public void setExtTransactionId(String extTransactionId) {
-        this.extTransactionId = extTransactionId;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public String getCountry() {
-        return country;
+    public void setYandexPayment(YandexPayment yandexPayment) {
+        this.yandexPayment = yandexPayment;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public static class YandexPayment {
+        private String extTransactionId;
+        private String processingCenterId;
+        private Double income;
+        private String incomeCurrency;
+        private String clientPaymentAccount;
+        private String paymentType;
+        private String paymentGateway;
+        private String country;
+
+        public String getExtTransactionId() {
+            return extTransactionId;
+        }
+
+        public void setExtTransactionId(String extTransactionId) {
+            this.extTransactionId = extTransactionId;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public Double getIncome() {
+            return income;
+        }
+
+        public String getIncomeCurrency() {
+            return incomeCurrency;
+        }
+
+        public String getClientPaymentAccount() {
+            return clientPaymentAccount;
+        }
+
+        public String getPaymentType() {
+            return paymentType;
+        }
+
+        public String getPaymentGateway() {
+            return paymentGateway;
+        }
+
+        public String getProcessingCenterId() {
+            return processingCenterId;
+        }
+
+
+        public void setIncome(Double income) {
+            this.income = income;
+        }
+
+        public void setIncomeCurrency(String incomeCurrency) {
+            this.incomeCurrency = incomeCurrency;
+        }
+
+        public void setClientPaymentAccount(String clientPaymentAccount) {
+            this.clientPaymentAccount = clientPaymentAccount;
+        }
+
+        public void setPaymentType(String paymentType) {
+            this.paymentType = paymentType;
+        }
+
+        public void setPaymentGateway(String paymentGateway) {
+            this.paymentGateway = paymentGateway;
+        }
+
+        public void setProcessingCenterId(String processingCenterId) {
+            this.processingCenterId = processingCenterId;
+        }
+
     }
 }
