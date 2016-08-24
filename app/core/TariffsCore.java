@@ -37,8 +37,8 @@ public class TariffsCore {
         Tariff active_tariff = TariffsDS.getActiveTariff(customer.getId(), project);
         Tariff shared_tariff = TariffsDS.getSharedTariff(customer.getId());
 
+        if (active_tariff != null) {return check_LimitsPackets(active_tariff, limits, packs);}
         if (customer.getPostpayMode()) {return true;}
-        if (active_tariff != null && check_LimitsPackets(active_tariff, limits, packs)) {return true;}
         if (shared_tariff != null && check_LimitsPackets(shared_tariff, limits, packs)) {
             if (customer.getAllowSharedSubscription() && shared_tariff.getType().equals("subscription")) {return true;}
             if (customer.getAllowSharedPack() && shared_tariff.getType().equals("packet")) {return true;}

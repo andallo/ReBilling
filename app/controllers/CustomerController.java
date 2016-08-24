@@ -36,9 +36,10 @@ public class CustomerController extends Controller {
             }
 
             if (action.equals("create")) {
+                _customer.setBalance(0);
                 String id = CustomerDS.saveIfUsernameUnique(_customer);
                 if (id == null) {
-                    flash("error", "Покупатель с логином «" + _customer.getUsername() + "» уже существует");
+                    flash("error", "Покупатель с логином «" + _customer.getUsername() + "» уже существует.");
                 } else {
                     flash("success", "Покупатель «" + _customer.getUsername() + "» создан.");
                 }
